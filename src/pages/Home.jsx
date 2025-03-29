@@ -47,68 +47,12 @@ const contractABI = [
     stateMutability: "view",
     type: "function",
   },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "hasVoted",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_candidate",
-        type: "uint256",
-      },
-    ],
-    name: "vote",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "votes",
-    outputs: [
-      {
-        internalType: "address",
-        name: "voter",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "candidate",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
 ];
 
 export default function Home() {
   const [account, setAccount] = useState(null);
   const [votes, setVotes] = useState([]);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
   async function connectWallet() {
     if (!window.ethereum) {
@@ -130,7 +74,7 @@ export default function Home() {
       alert("Connect your wallet first");
       return;
     }
-    setLoading(true); // Set loading to true
+    setLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -139,15 +83,6 @@ export default function Home() {
         contractABI,
         signer
       );
-
-      // Check if the user has already voted
-      const hasAlreadyVoted = await contract.hasVoted(account);
-      if (hasAlreadyVoted) {
-        alert("You have already voted.");
-        setLoading(false);
-        return;
-      }
-
       const tx = await contract.vote(candidate);
       await tx.wait();
       alert("Vote cast successfully");
@@ -156,7 +91,7 @@ export default function Home() {
       console.error("Error voting:", error);
       alert(`Error voting: ${error.message || "Unknown error occurred."}`);
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   }
 
@@ -182,20 +117,30 @@ export default function Home() {
   }
 
   return (
-    <div className="card">
-      <h1>Voting DApp</h1>
+    <div
+      className="container mx-auto p-10 flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: "url('src/assets/download (6).jpg')",
+        backgroundopacity: 0.8,
+      }}
+    >
+      <h1>Cipher LNMIIT - Blockchain and Web3 Club</h1>
+      <p>
+        Welcome to Cipher LNMIIT, the blockchain and Web3 club of LNMIIT. Join
+        us to explore the future of decentralized technology.
+      </p>
       <button onClick={connectWallet} className="connect-btn">
         {account
           ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`
           : "Connect Wallet"}
       </button>
-      <div className="flex justify-center space-x-4 mt-6">
+      <div className="flex justify-center space-x-4 mt-20">
         {["A", "B", "C", "D", "E"].map((name, index) => (
           <button
             key={index}
             onClick={() => vote(index)}
             className="vote-btn"
-            disabled={loading} // Disable button while loading
+            disabled={loading}
           >
             {loading ? "Processing..." : `Vote for ${name}`}
           </button>

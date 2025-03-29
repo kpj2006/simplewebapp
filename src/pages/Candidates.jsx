@@ -11,14 +11,16 @@ const candidates = [
 
 export default function Candidates() {
   return (
-    <div className="card">
-      <h1>Meet the Candidates</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {candidates.map((candidate) => (
-          <Link to={`/candidate/${candidate.id}`} key={candidate.id}>
-            <CandidateCard candidate={candidate} />
-          </Link>
-        ))}
+    <div>
+      <div className="mt-20">
+        <h1>Meet the Candidates</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+          {candidates.map((candidate) => (
+            <Link to={`/candidate/${candidate.id}`} key={candidate.id}>
+              <CandidateCard candidate={candidate} />
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
